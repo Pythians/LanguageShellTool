@@ -1,0 +1,113 @@
+#!/bin/bash
+
+help()
+{
+   cat << HELP
+Language convert tool
+    
+    This tool convert Excle to lua file, or reverse
+    Tool need python and lua 5.3.
+
+EXAMPLE:
+    LanguageTool -m -c -o Text.xls -d Out
+        update Text.xls and app language files, Save them to Out, show what have changed
+    LanguageTool -l en -o Text.xls -d Out
+        From *.xls read txt, and convert to *.lua, Save to Out
+        This is English Language Pag
+OPTION:
+    -h Help document
+    -t clear temp file,
+    -m if use this option, Tool will update current Language files,
+        if not, just save lua file from xls
+
+    -o origin file, only *.xls file can be use
+    -d save files dir, if exist, it will be remove, if not exist, it will be create
+    -l convert Language, save file extension
+HELP
+   exit 0
+}
+
+# check error
+check()
+{
+    if [ $? -ne 0 ]; then
+        echo "something happened, exit!"
+        exit 0
+    fi
+}
+
+# clear temp file sign, if 1 clear, other value not 
+CLEARTEMP=0
+
+mode=0
+diff=0
+originFile="Text.xls"
+targetDir="Out"
+language="cn"
+
+# get opts
+while getopts "htmco:d:l:" arg
+do
+    case $arg in
+        h) help ;;
+        m) mode=1;;
+        t) CLEARTEMP=1;;
+        c) diff=1;;
+        o) originFile="$OPTARG";;
+        d) targetDir="$OPTARG";;
+        l) language="$OPTARG";;
+        ?) echo "unknown argument. -h for help"; exit 1;;
+    esac
+done
+
+# targetDir + language
+targetDir="$targetDir/$language"
+
+# origin file
+if ! [ -f "$originFile" ]; then
+    echo "$originFile not exist"
+    exit 1
+fi
+
+# output dir
+if [ -d "$targetDir" ]; then
+    if [ 1 == $CLEARTEMP ]; then
+        echo "clear $targetDir"
+        rm -r "$targetDir"
+        mkdir "$targetDir"
+    fi
+else
+    if [ "/" != ${targetDir:0:1} ]; then
+        targetDir=$(pwd)/$targetDir
+    fi
+    echo "create dir $targetDir"
+    mkdir "$targetDir"
+fi
+
+# temp dir
+temp="temp"
+if [ 1 == $CLEARTEMP ]; then
+    rm -r "$temp"
+    mkdir "$temp"
+fi
+
+# tempFile
+tem2Lua="$temp/languageFromExcel.lua"
+tem2Xls="$temp/srcLanguage.lua"
+lua_lua="$temp.languageFromExcel"
+py_xls="$targetDir/Text.xls"
+
+
+if [ 0 == $mode ]; then
+    python src/Excel2Lua.py $originFile $tem2Lua
+    check
+    lua src/main.lua $mode $lua_lua $targetDir $language $diff
+    check
+else
+    lua src/main.lua $mode $tem2Xls
+    check
+    python src/Lua2Excel.py $tem2Xls $py_xls
+    check
+fi
+
+echo "All thing has Done"
