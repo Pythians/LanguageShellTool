@@ -3,3 +3,4 @@ Out/
 temp/
 app/
 .*/
+.DS_Store

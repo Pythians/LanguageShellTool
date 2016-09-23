@@ -60,9 +60,6 @@ do
     esac
 done
 
-# targetDir + language
-targetDir="$targetDir/$language"
-
 # origin file
 if ! [ -f "$originFile" ]; then
     echo "$originFile not exist"
@@ -84,12 +81,28 @@ else
     mkdir "$targetDir"
 fi
 
+# targetDir + language
+targetDir="$targetDir/$language"
+if [ -d "$targetDir" ]; then
+    if [ 1 == $CLEARTEMP ]; then
+        echo "clear $targetDir"
+        rm -r "$targetDir"
+        mkdir "$targetDir"
+    fi
+else
+    if [ "/" != ${targetDir:0:1} ]; then
+        targetDir=$(pwd)/$targetDir
+    fi
+    echo "create dir $targetDir"
+    mkdir "$targetDir"
+fi
+
 # temp dir
 temp="temp"
-if [ 1 == $CLEARTEMP ]; then
+if [ -d "$temp" ]; then
     rm -r "$temp"
-    mkdir "$temp"
 fi
+mkdir "$temp"
 
 # tempFile
 tem2Lua="$temp/languageFromExcel.lua"
@@ -108,6 +121,10 @@ else
     check
     python src/Lua2Excel.py $tem2Xls $py_xls
     check
+fi
+
+if [ 1 == $CLEARTEMP ]; then
+    rm -r "$temp"
 fi
 
 echo "All thing has Done"
