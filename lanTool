@@ -40,7 +40,6 @@ check()
 CLEARTEMP=0
 
 mode=0
-diff=0
 originFile="Text.xls"
 targetDir="Out"
 language="cn"
@@ -52,7 +51,7 @@ do
         h) help ;;
         m) mode=1;;
         t) CLEARTEMP=1;;
-        c) diff=1;;
+        c) mode=2;;
         o) originFile="$OPTARG";;
         d) targetDir="$OPTARG";;
         l) language="$OPTARG";;
@@ -99,27 +98,36 @@ fi
 
 # temp dir
 temp="temp"
-if [ -d "$temp" ]; then
-    rm -r "$temp"
+if [ 1 == $CLEARTEMP ]; then
+    if [ -d "$temp" ]; then
+        rm -r "$temp"
+    fi
+    mkdir "$temp"
 fi
-mkdir "$temp"
 
 # tempFile
 tem2Lua="$temp/languageFromExcel.lua"
 tem2Xls="$temp/srcLanguage.lua"
-lua_lua="$temp.languageFromExcel"
+temComp="$temp/languageComp.lua"
+lua_xls="$temp.languageFromExcel"
+lua_lua="$temp.srcLanguage"
 py_xls="$targetDir/Text.xls"
-
+py_comp="$targetDir/Text_comp.xls"
 
 if [ 0 == $mode ]; then
     python src/Excel2Lua.py $originFile $tem2Lua
     check
-    lua src/main.lua $mode $lua_lua $targetDir $language $diff
+    lua src/main.lua $mode $lua_xls $targetDir $language
     check
-else
+elif [ 1 == $mode ]; then
     lua src/main.lua $mode $tem2Xls
     check
     python src/Lua2Excel.py $tem2Xls $py_xls
+    check
+elif [ 2 == $mode ]; then
+    lua src/main.lua 2 "$lua_xls|$lua_lua" $temComp
+    check
+    python src/Lua2Excel.py $temComp $py_comp
     check
 fi
 
@@ -128,3 +136,5 @@ if [ 1 == $CLEARTEMP ]; then
 fi
 
 echo "All thing has Done"
+#echo "Press Any Key To Exit"
+#read -s -n 1

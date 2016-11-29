@@ -158,7 +158,7 @@ function tool.Lua2E(fileName)
     local r_HeroEquip_n = {'-', {"Name","tipInfo"}}
     local r_HeroEquip_Effect = {'Effect', '-', '*', {1}}
     local r_BagPackItem = {'*', '*'}
-    local r_AcademyScience = {'*', {"name","explain",'icon'}}
+    local r_AcademyScience = {'*', {"name","explain"}}
     local r_language = {'*'}
     local r_BuildUpgrade_effect = {'*','*',{'effect'}}
     local r_BuildUpgrade_item = {'*','*','-',{'item','text'}}
@@ -537,5 +537,24 @@ function tool.tableSaveToFile(value, nesting, desciption, fileName)
     return fileName
 end
 
+function tool.compare(originFile,targetDir)
+    local ftab = str_split(originFile, '|')
+    local fromExcle, fromProject = ftab[1], ftab[2]
+    fromExcle = require2(fromExcle)
+    fromProject = require2(fromProject)
+    local tab = {}
+    for kp,vp in pairs(fromProject) do
+        local b = true
+        for ke,ve in pairs(fromExcle) do
+            if kp == ke then-- and vp == ve then
+                b = false
+            end
+        end
+        if b then
+            tab[kp] = vp
+        end
+    end
+    tool.tableSaveToFile(tab,1,"language",targetDir)
+end
 
 return tool

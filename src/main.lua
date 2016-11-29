@@ -4,6 +4,10 @@ function import(moduleName)
     return require('app.components.language' .. moduleName)
 end
 
+function require2(moduleName)
+    return require(moduleName)
+end
+
 function clone(object)
     local lookup_table = {}
     local function _copy(object)
@@ -83,14 +87,16 @@ function dump(value, desciption, nesting)
     end
 end
 
-local model, originFile, targetDir, lang, isDiff = arg[1], arg[2], arg[3], arg[4], arg[5]
+local model, originFile, targetDir, lang = arg[1], arg[2], arg[3], arg[4]
 
 local tool = require("src.tool")
 
 if model == '0' then
     local langTab = require(originFile)
     tool.upDateTable(langTab, targetDir, lang)
-else
+elseif model == '1' then
     tool.Lua2E(originFile)
+elseif model == '2' then
+    tool.compare(originFile,targetDir)
 end
 
