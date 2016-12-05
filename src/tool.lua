@@ -409,6 +409,7 @@ function tool.upDateTable(arr, targetDir, language)
 --      },
 -- }
     for k, v in pairs(arr) do
+        v = string.gsub( v, '%s+$', '\\n' )
     	local t = str_split(k,'_')
     	local key = t[1]
     	table.remove(t,1)
@@ -542,16 +543,21 @@ function tool.compare(originFile,targetDir)
     local fromExcle, fromProject = ftab[1], ftab[2]
     fromExcle = require2(fromExcle)
     fromProject = require2(fromProject)
+    for k,v in pairs(fromExcle) do
+        fromExcle[k] = string.gsub( v, '%s+$', '\\n' )
+    end
     local tab = {}
     for kp,vp in pairs(fromProject) do
         local b = true
         for ke,ve in pairs(fromExcle) do
-            if kp == ke then-- and vp == ve then
+            if ve and kp == ke and vp == ve then
                 b = false
+                fromExcle[ke] = nil
+                break
             end
         end
         if b then
-            tab[kp] = vp
+            tab[kp] = string.gsub(vp,'\n','\\n')
         end
     end
     tool.tableSaveToFile(tab,1,"language",targetDir)

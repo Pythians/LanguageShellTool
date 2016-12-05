@@ -9,14 +9,17 @@ Language convert tool
     Tool need python and lua 5.3.
 
 EXAMPLE:
-    LanguageTool -m -c -o Text.xls -d Out
-        update Text.xls and app language files, Save them to Out, show what have changed
+    LanguageTool -m -o Text.xls -d Out
+        update Text.xls and app language files, Save them to Out
     LanguageTool -l en -o Text.xls -d Out
         From *.xls read txt, and convert to *.lua, Save to Out
         This is English Language Pag
+    LanguageTool -c -o Text.xls
+        compare Text.xls with project language
 OPTION:
     -h Help document
     -t clear temp file,
+    -c compare mode, compare Excle file with project language, output to Text_comp
     -m if use this option, Tool will update current Language files,
         if not, just save lua file from xls
 
@@ -40,6 +43,7 @@ check()
 CLEARTEMP=0
 
 mode=0
+notcn=0
 originFile="Text.xls"
 targetDir="Out"
 language="cn"
@@ -54,7 +58,7 @@ do
         c) mode=2;;
         o) originFile="$OPTARG";;
         d) targetDir="$OPTARG";;
-        l) language="$OPTARG";;
+        l) language="$OPTARG"; notcn=1 ;;
         ?) echo "unknown argument. -h for help"; exit 1;;
     esac
 done
@@ -98,10 +102,11 @@ fi
 
 # temp dir
 temp="temp"
-if [ 1 == $CLEARTEMP ]; then
-    if [ -d "$temp" ]; then
-        rm -r "$temp"
-    fi
+if [ -d "$temp" -a 1 == $CLEARTEMP ]; then
+    rm -r "$temp"
+fi
+
+if [ ! -d "$temp" ]; then
     mkdir "$temp"
 fi
 
@@ -115,7 +120,7 @@ py_xls="$targetDir/Text.xls"
 py_comp="$targetDir/Text_comp.xls"
 
 if [ 0 == $mode ]; then
-    python src/Excel2Lua.py $originFile $tem2Lua
+    python src/Excel2Lua.py $originFile $tem2Lua $notcn
     check
     lua src/main.lua $mode $lua_xls $targetDir $language
     check
@@ -125,6 +130,10 @@ elif [ 1 == $mode ]; then
     python src/Lua2Excel.py $tem2Xls $py_xls
     check
 elif [ 2 == $mode ]; then
+    python src/Excel2Lua.py $originFile $tem2Lua 0
+    check
+    lua src/main.lua 1 $tem2Xls
+    check
     lua src/main.lua 2 "$lua_xls|$lua_lua" $temComp
     check
     python src/Lua2Excel.py $temComp $py_comp
