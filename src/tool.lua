@@ -189,7 +189,11 @@ function tool.Lua2E(fileName)
     _t2a(BuildMoreInfoConfig, r_BuildMoreInfo, arr,{"BuildMoreInfo"})
     _t2a(BuildMoreInfoConfig, r_BuildMoreInfo_sub, arr,{"BuildMoreInfo"})
 
-    return tool.tableSaveToFile(arr,1,'language', fileName)
+    if fileName then
+        return tool.tableSaveToFile(arr,1,'language', fileName)
+    else
+        return arr
+    end
 end
 
 ----------------------------------------------------------------------
@@ -538,29 +542,31 @@ function tool.tableSaveToFile(value, nesting, desciption, fileName)
     return fileName
 end
 
-function tool.compare(originFile,targetDir)
-    local ftab = str_split(originFile, '|')
-    local fromExcle, fromProject = ftab[1], ftab[2]
-    fromExcle = require2(fromExcle)
-    fromProject = require2(fromProject)
-    for k,v in pairs(fromExcle) do
-        fromExcle[k] = string.gsub( v, '%s+$', '' )
-    end
+function tool.compare(targetDir)
+    local fromBackup = require2('temp.backup')
+    local fromProject = require2('temp.srcLanguage')
     local tab = {}
     for kp,vp in pairs(fromProject) do
         local b = true
-        for ke,ve in pairs(fromExcle) do
+        for ke,ve in pairs(fromBackup) do
             if ve and kp == ke and vp == ve then
                 b = false
-                fromExcle[ke] = nil
+                fromBackup[ke] = nil
                 break
             end
         end
         if b then
-            tab[kp] = string.gsub(vp,'\n','\\n')
+            tab[kp] = vp
         end
     end
-    tool.tableSaveToFile(tab,1,"language",targetDir)
+    local o1 = tool.Lua2E()
+    for k,v in pairs(tab) do
+        o1[k] = v
+    end
+    for k,v in pairs(o1) do
+        o1[k] = string.gsub( v,'\n','\\n')
+    end
+    tool.tableSaveToFile(o1,1,"language",targetDir)
 end
 
 return tool

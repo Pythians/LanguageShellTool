@@ -22,7 +22,7 @@ OPTION:
     -c compare mode, compare Excle file with project language, output to Text_comp
     -m if use this option, Tool will update current Language files,
         if not, just save lua file from xls
-
+    -r xls read 2th column
     -o origin file, only *.xls file can be use
     -d save files dir, if exist, it will be remove, if not exist, it will be create
     -l convert Language, save file extension
@@ -49,16 +49,17 @@ targetDir="Out"
 language="cn"
 
 # get opts
-while getopts "htmco:d:l:" arg
+while getopts "htmcro:d:l:" arg
 do
     case $arg in
         h) help ;;
         m) mode=1;;
         t) CLEARTEMP=1;;
         c) mode=2;;
+        r) notcn=1;;
         o) originFile="$OPTARG";;
         d) targetDir="$OPTARG";;
-        l) language="$OPTARG"; notcn=1 ;;
+        l) language="$OPTARG";;
         ?) echo "unknown argument. -h for help"; exit 1;;
     esac
 done
@@ -115,7 +116,6 @@ tem2Lua="$temp/languageFromExcel.lua"
 tem2Xls="$temp/srcLanguage.lua"
 temComp="$temp/languageComp.lua"
 lua_xls="$temp.languageFromExcel"
-lua_lua="$temp.srcLanguage"
 py_xls="$targetDir/Text.xls"
 py_comp="$targetDir/Text_comp.xls"
 
@@ -130,11 +130,7 @@ elif [ 1 == $mode ]; then
     python src/Lua2Excel.py $tem2Xls $py_xls
     check
 elif [ 2 == $mode ]; then
-    python src/Excel2Lua.py $originFile $tem2Lua 0
-    check
-    lua src/main.lua 1 $tem2Xls
-    check
-    lua src/main.lua 2 "$lua_xls|$lua_lua" $temComp
+    lua src/main.lua 2 "-" $temComp
     check
     python src/Lua2Excel.py $temComp $py_comp
     check

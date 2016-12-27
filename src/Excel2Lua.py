@@ -24,7 +24,8 @@ data="local languageFromExcel = { \n"
 sheet1=excel.sheet_by_index(0)
 rowNum=sheet1.nrows
 for r in range(2,rowNum,1):
-	data=data+'\t'+ str(sheet1.cell(r,0).value) +'' + ' = ' + '[[' + sheet1.cell(r,column).value + ' ]],\n'
+	if sheet1.cell(r,0).value != "" :
+		data=data+'\t'+ str(sheet1.cell(r,0).value) +'' + ' = ' + '[[' + sheet1.cell(r,column).value + ' ]],\n'
 data=data+"}\nreturn languageFromExcel"
 
 fileOutput=open(tempFile,'w')

@@ -97,6 +97,5 @@ if model == '0' then
 elseif model == '1' then
     tool.Lua2E(originFile)
 elseif model == '2' then
-    tool.compare(originFile,targetDir)
+    tool.compare(targetDir)
 end
-
