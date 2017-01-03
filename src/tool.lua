@@ -153,6 +153,7 @@ function tool.Lua2E(fileName)
     local r_mode_HeroSpeciality_n = {"HeroUI","HeroSpeciality", '-', {"name","effect"}}
     local r_SoliderSkill = {'*', {"Name","Introduce"}}
     local r_MoreInfo = {'*', '-', '-', {"text"}}
+    local r_MoreInfo_title = {'*', '='}
     local r_HerosName = {'*', '-',{"Name"}}
     local r_HeroSkill = {'*', {"Name","Introduce","Introduce4Fight"}}
     local r_HeroEquip_n = {'-', {"Name","tipInfo"}}
@@ -178,6 +179,7 @@ function tool.Lua2E(fileName)
     _t2a(languageMode, r_mode_HeroSpeciality_n, arr,{"languageMode"})
     _t2a(SoliderSkill, r_SoliderSkill, arr,{"SoliderSkill"})
     _t2a(MoreInfoConfig, r_MoreInfo, arr, {"MoreInfo"})
+    _t2a(MoreInfoConfig, r_MoreInfo_title, arr, {"MoreInfo"})
     _t2a(HeroSkillConfig, r_HeroSkill, arr,{"HeroSkill"})
     _t2a(HeroEquipConfig, r_HeroEquip_n, arr,{"HeroEquip"})
     _t2a(HeroEquipConfig, r_HeroEquip_Effect, arr,{"HeroEquip"})
