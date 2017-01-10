@@ -143,7 +143,7 @@ function tool.Lua2E(fileName)
 -- {} 中指定匹配的子键
     local r_mode_FieldMap = {"FieldMap","*","*",{"Explain","ID"}}
     local r_mode_FieldMap2 = {"FieldMap","-","-",'-'}
-    local r_mode_FieldMap3 = {"FieldMap",{2,6,8,9,10,11,12,17,18,19},"-",'moreInfo','*','*'}
+    local r_mode_FieldMap3 = {"FieldMap",{2,6,8,9,10,11,12,13,17,18,19},"-",'moreInfo','*','*'}
     local r_mode_Building = {"Building","*",{"ID","Explain"}}
     local r_mode_HeroUI_HeroIntroduce = {"HeroUI","HeroIntroduce", '*'}
     local r_mode_HeroUI_HeroBoss = {"HeroUI","HeroBoss", {"newOpen","firstHero"}}
