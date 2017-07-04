@@ -10,10 +10,6 @@ sys.setdefaultencoding( "utf-8" )
 excelFile=sys.argv[1]
 tempFile=sys.argv[2]
 
-column = 1
-if sys.argv[3] == '1' :
-	column = 2
-
 if not os.path.exists(excelFile):
 	print("Error! "+ excelFile + " not exist!!!")
 	sys.exit(1)
