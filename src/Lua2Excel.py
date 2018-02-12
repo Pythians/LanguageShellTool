@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*- 
 
-from xlwt import *
+from xlwt import Workbook
 import sys
 import os
 
@@ -11,7 +11,7 @@ sys.setdefaultencoding( "utf-8" )
 luaFile=sys.argv[1]
 
 if not os.path.exists(luaFile):
-	print("Error! " + luaFile + " not exist!!!")
+	print ("Error! " + luaFile + " not exist!!!")
 	sys.exit(1)
 
 

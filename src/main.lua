@@ -87,7 +87,7 @@ function dump(value, desciption, nesting)
     end
 end
 
-local model, originFile, targetDir, lang = arg[1], arg[2], arg[3], arg[4]
+local model, originFile, targetDir, lang, baseFile = arg[1], arg[2], arg[3], arg[4], arg[5]
 
 local tool = require("src.tool")
 
@@ -98,4 +98,10 @@ elseif model == '1' then
     tool.Lua2E(originFile)
 elseif model == '2' then
     tool.compare(targetDir)
+elseif model == "3" then
+    local langTab = require(originFile)
+    for k,v in pairs(require(baseFile)) do
+        langTab[k] = v
+    end
+    tool.upDateTable(langTab,targetDir,lang)
 end
