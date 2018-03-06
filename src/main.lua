@@ -99,8 +99,8 @@ elseif model == '1' then
 elseif model == '2' then
     tool.compare(targetDir)
 elseif model == "3" then
-    local langTab = require(originFile)
-    for k,v in pairs(require(baseFile)) do
+    local langTab = require(baseFile)
+    for k,v in pairs(require(originFile)) do
         langTab[k] = v
     end
     tool.upDateTable(langTab,targetDir,lang)

@@ -51,7 +51,7 @@ targetDir="Out"
 language="cn"
 
 # get opts
-while getopts "htmcaio:d:l:" arg
+while getopts "htmcaizo:d:l:" arg
 do
     case $arg in
         h) help ;;
@@ -60,7 +60,8 @@ do
         c) mode=2;;
         a) mode=3;;
         i) mode=4;;
-        o) originFile="$OPTARG";;
+        z) mode=5;;
+        o) originFile="$OPTARG"; textT="$OPTARG";;
         d) targetDir="$OPTARG";;
         l) language="$OPTARG";;
         ?) echo "unknown argument. -h for help"; exit 1;;
@@ -215,6 +216,9 @@ case $mode in
         lua src/main.lua 3 $lua_xls $saveDir ${languageExt[$i]} "$baseLua${languageExt[$i]}"
         check
     done
+    checkLuaFile
+    ;;
+    5)
     checkLuaFile
     ;;
     *) echo "do nothing"
