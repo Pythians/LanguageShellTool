@@ -1,14 +1,14 @@
 
-local AcademyScienceConfig = require("app.components.language.AcademyScienceConfig")
-local BagPackItemConfig = require('app.components.language.BagPackItemConfig')
-local BuildMoreInfoConfig = require("app.components.language.BuildMoreInfoConfig")
-local BuildUpgradeConfig = require("app.components.language.BuildUpgradeConfig")
-local HeroEquipConfig = require("app.components.language.HeroEquipConfig")
-local HeroSkillConfig = require("app.components.language.HeroSkillConfig")
-local SoliderSkill = require("app.components.language.SoliderSkillConfig")
-local MoreInfoConfig = require("app.components.language.MoreInfoConfig")
-local language_cn = require("app.components.language.language")
-local languageMode = require("app.components.language.languageMode")
+local AcademyScienceConfig = import(".AcademyScienceConfig")
+local BagPackItemConfig = import('.BagPackItemConfig')
+local BuildMoreInfoConfig = import(".BuildMoreInfoConfig")
+local BuildUpgradeConfig = import(".BuildUpgradeConfig")
+local HeroEquipConfig = import(".HeroEquipConfig")
+local HeroSkillConfig = import(".HeroSkillConfig")
+local SoliderSkill = import(".SoliderSkillConfig")
+local MoreInfoConfig = import(".MoreInfoConfig")
+local language_cn = import(".language")
+local languageMode = import(".languageMode")
 
 
 
@@ -308,9 +308,9 @@ local function setTableLM(desciption, tab, config, file)
     
     local content = {}
     
-    local fp = io.open('app/components/language/languageMode.lua','r')
+    local fp = io.open('app/components/language/cn/languageMode.lua','r')
     if not fp then
-        print("can't open file: app/components/language/languageMode.lua")
+        print("can't open file: app/components/language/cn/languageMode.lua")
         os.exit(1)
     end
     for li in fp:lines() do

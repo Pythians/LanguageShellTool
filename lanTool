@@ -23,7 +23,8 @@ OPTION:
     -c compare mode, compare Excle file with project language, output to Text_comp
     -m if use this option, Tool will update current Language files,
         if not, just save lua file from xls
-    -a  export (batch Processing)
+    -a export (batch Processing)
+    -e export base lua file and xls file 
     -o origin file, only *.xls file can be use
     -d save files dir, if exist, it will be remove, if not exist, it will be create
     -l convert Language, save file extension
@@ -46,12 +47,13 @@ CLEARTEMP=0
 mode=0
 originFile="Text.xls"
 baseLua="base.E2L_"
+baseExp="base/E2L_"
 textT="Text_T.xls"
 targetDir="Out"
 language="cn"
 
 # get opts
-while getopts "htmcaizo:d:l:" arg
+while getopts "htmcaizeo:d:l:" arg
 do
     case $arg in
         h) help ;;
@@ -61,6 +63,7 @@ do
         a) mode=3;;
         i) mode=4;;
         z) mode=5;;
+        e) mode=6;;
         o) originFile="$OPTARG"; textT="$OPTARG";;
         d) targetDir="$OPTARG";;
         l) language="$OPTARG";;
@@ -220,6 +223,19 @@ case $mode in
     ;;
     5)
     checkLuaFile
+    ;;
+    6)
+    makeOutDir "XlS"
+    check
+    for (( i=0; i<${#languageExt[@]}; i++ ));
+    do
+        lua src/main.lua 1 $tem2Xls $saveDir ${languageExt[$i]}
+        check
+        cp -f $tem2Xls "$baseExp${languageExt[$i]}.lua"
+        check
+        python src/Lua2Excel.py $tem2Xls "$saveDir/${xlsFiles[$i]}.xls"
+        check
+    done
     ;;
     *) echo "do nothing"
     ;;

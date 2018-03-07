@@ -3,5 +3,6 @@ Out/
 back/
 temp/
 app/
+base/
 .*/
 .DS_Store
