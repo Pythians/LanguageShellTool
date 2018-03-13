@@ -1,15 +1,14 @@
 
-local AcademyScienceConfig = import(".AcademyScienceConfig")
-local BagPackItemConfig = import('.BagPackItemConfig')
-local BuildMoreInfoConfig = import(".BuildMoreInfoConfig")
-local BuildUpgradeConfig = import(".BuildUpgradeConfig")
-local HeroEquipConfig = import(".HeroEquipConfig")
-local HeroSkillConfig = import(".HeroSkillConfig")
-local SoliderSkill = import(".SoliderSkillConfig")
-local MoreInfoConfig = import(".MoreInfoConfig")
-local language_cn = import(".language")
-local languageMode = import(".languageMode")
-
+local AcademyScienceConfig
+local BagPackItemConfig
+local BuildMoreInfoConfig
+local BuildUpgradeConfig
+local HeroEquipConfig
+local HeroSkillConfig
+local SoliderSkill
+local MoreInfoConfig
+local language_cn
+local languageMode
 
 
 ----------------------------------------------------------------------------------------------------
@@ -48,6 +47,24 @@ local languageMode = import(".languageMode")
 ----------------------------------------------------------------------------------------------------
 
 local tool = {}
+
+local importLang
+function import(moduleName)
+    return require('app.components.language.' .. importLang .. moduleName)
+end
+function tool.initLanguge( language )
+    importLang = language
+    AcademyScienceConfig = import(".AcademyScienceConfig")
+    BagPackItemConfig = import('.BagPackItemConfig')
+    BuildMoreInfoConfig = import(".BuildMoreInfoConfig")
+    BuildUpgradeConfig = import(".BuildUpgradeConfig")
+    HeroEquipConfig = import(".HeroEquipConfig")
+    HeroSkillConfig = import(".HeroSkillConfig")
+    SoliderSkill = import(".SoliderSkillConfig")
+    MoreInfoConfig = import(".MoreInfoConfig")
+    language_cn = import(".language")
+    languageMode = import(".languageMode")
+end
 
 ---------------------------------------------------------------------------------------
 --@function 从给的源配置中按照给的键顺序取出对应值
@@ -427,7 +444,7 @@ function tool.upDateTable(arr, targetDir, language)
             tab[key][#tab[key] + 1]= {t,v}            
         end
     end
-
+    
     for k,v in pairs(tab) do
         if k == 'languageMode' then
             setTableLM(k,v,languageMode,'languageMode')

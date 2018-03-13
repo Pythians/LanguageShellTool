@@ -1,8 +1,4 @@
 #!/usr/bin/env lua
-language = "cn"
-function import(moduleName)
-    return require('app.components.language.' .. language .. moduleName)
-end
 
 function require2(moduleName)
     return require(moduleName)
@@ -80,7 +76,7 @@ function dump(value, desciption, nesting)
             end
         end
     end
-    _dump(value, desciption, "- ", 1)
+    _dump(value, desciption, "", 3)
 
     for i, line in ipairs(result) do
         print(line)
@@ -89,9 +85,8 @@ end
 
 local model, originFile, targetDir, lang, baseFile = arg[1], arg[2], arg[3], arg[4], arg[5]
 
-language = lang or language
-
 local tool = require("src.tool")
+tool.initLanguge( lang )
 
 if model == '0' then
     local langTab = require(originFile)
@@ -105,5 +100,6 @@ elseif model == "3" then
     for k,v in pairs(require(originFile)) do
         langTab[k] = v
     end
+    tool.initLanguge( "cn" )
     tool.upDateTable(langTab,targetDir,lang)
 end
