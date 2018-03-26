@@ -126,8 +126,6 @@ tem2Lua="$temp/languageFromExcel.lua"
 tem2Xls="$temp/srcLanguage.lua"
 temComp="$temp/languageComp.lua"
 lua_xls="$temp.languageFromExcel"
-py_xls="$saveDir/Text.xls"
-py_comp="$saveDir/Text_comp.xls"
 
 # Language ext config
 typeset -a xlsFiles
@@ -186,7 +184,7 @@ case $mode in
     check
     lua src/main.lua $mode $tem2Xls
     check
-    python src/Lua2Excel.py $tem2Xls $py_xls
+    python src/Lua2Excel.py $tem2Xls "$saveDir/Text.xls"
     check
     ;;
     2)
@@ -194,7 +192,7 @@ case $mode in
     check
     lua src/main.lua 2 "-" $temComp
     check
-    python src/Lua2Excel.py $temComp $py_comp
+    python src/Lua2Excel.py $temComp "$saveDir/Text_comp.xls"
     check
     ;;
     3)
