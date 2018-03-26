@@ -86,7 +86,7 @@ end
 local model, originFile, targetDir, lang, baseFile = arg[1], arg[2], arg[3], arg[4], arg[5]
 
 local tool = require("src.tool")
-tool.initLanguge( lang )
+tool.initLanguge( lang or "cn" )
 
 if model == '0' then
     local langTab = require(originFile)
