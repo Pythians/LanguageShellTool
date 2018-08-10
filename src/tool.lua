@@ -409,7 +409,7 @@ end
 --@param arr table 源文件
 --@param targetDir string 保存文件夹
 --@param language string 翻译语言，不同文件区分后缀 
-function tool.upDateTable(arr, targetDir, language)
+function tool.upDateTable(arr, targetDir, language, rmKeyFile)
     -- local arr = equire(originFile)
     tool.saveDir = targetDir .. '/'
     if language then
@@ -419,6 +419,18 @@ function tool.upDateTable(arr, targetDir, language)
     end
     local tab = {}
  
+    if rmKeyFile then
+        local fp = io.open(rmKeyFile,"r")
+        if not fp then
+            print("can't open file: " .. rmKeyFile)
+            os.exit(1)
+        end
+        for li in fp:lines() do
+            local key = string.gsub( li,"^language_", "" )
+            language_cn[key] = nil
+            arr["language_"..key] = nil
+        end
+    end
 ------------------------------------------------------------------
 -- 将文件的内容转化为table
 -- {

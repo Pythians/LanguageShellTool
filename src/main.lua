@@ -83,14 +83,14 @@ function dump(value, desciption, nesting)
     end
 end
 
-local model, originFile, targetDir, lang, baseFile = arg[1], arg[2], arg[3], arg[4], arg[5]
+local model, originFile, targetDir, lang, baseFile, rmKeyFile = arg[1], arg[2], arg[3], arg[4], arg[5], arg[6]
 
 local tool = require("src.tool")
 tool.initLanguge( lang or "cn" )
 
 if model == '0' then
     local langTab = require(originFile)
-    tool.upDateTable(langTab, targetDir, lang)
+    tool.upDateTable(langTab, targetDir, lang, rmKeyFile)
 elseif model == '1' then
     tool.Lua2E(originFile)
 elseif model == '2' then
@@ -101,5 +101,5 @@ elseif model == "3" then
         langTab[k] = v
     end
     tool.initLanguge( "cn" )
-    tool.upDateTable(langTab,targetDir,lang)
+    tool.upDateTable(langTab,targetDir,lang, rmKeyFile)
 end

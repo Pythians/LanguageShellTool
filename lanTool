@@ -25,6 +25,8 @@ OPTION:
         if not, just save lua file from xls
     -a export (batch Processing)
     -e export base lua file and xls file 
+    -z check lua output file syntax
+    -r remove key file, delete all keys in the file
     -o origin file, only *.xls file can be use
     -d save files dir, if exist, it will be remove, if not exist, it will be create
     -l convert Language, save file extension
@@ -53,7 +55,7 @@ targetDir="Out"
 language="cn"
 
 # get opts
-while getopts "htmcaizeo:d:l:" arg
+while getopts "htmcaizer:o:d:l:" arg
 do
     case $arg in
         h) help ;;
@@ -64,6 +66,7 @@ do
         i) mode=4;;
         z) mode=5;;
         e) mode=6;;
+        r) rmKeyFile="$OPTARG";;
         o) originFile="$OPTARG"; textT="$OPTARG";;
         d) targetDir="$OPTARG";;
         l) language="$OPTARG";;
@@ -71,11 +74,13 @@ do
     esac
 done
 
-# origin file
-if ! [ -f "$originFile" ]; then
-    echo "$originFile not exist"
-    exit 1
-fi
+function checkFileExist()
+{
+    if ! [ -f "$1" ]; then
+        echo "$1 not exist"
+        exit 1
+    fi
+}
 
 # output dir
 if [ -d "$targetDir" ]; then
@@ -161,11 +166,22 @@ function fun1()
     check
 }
 
+function fun2()
+{
+    if [[ -f "$rmKeyFile" ]]; 
+    then
+        for line in `cat $rmKeyFile`
+        do
+            sed -i "/$line/d" $tem2Xls
+        done
+    fi
+}
+
 function checkLuaFile()
 {
     echo 
     echo "==============check output file=============="
-    for VAR in `ls */*/*lua`
+    for VAR in `ls $targetDir/*/*lua`
     do
         luac -o "temp/luac.out" $VAR
     done
@@ -176,13 +192,15 @@ case $mode in
     0)
     makeOutDir $language
     check
+    checkFileExist $originFile
     fun1 $originFile $language
     checkLuaFile
     ;;
     1)
     makeOutDir "XlS"
     check
-    lua src/main.lua $mode $tem2Xls
+    lua src/main.lua 1 $tem2Xls
+    fun2
     check
     python src/Lua2Excel.py $tem2Xls "$saveDir/Text.xls"
     check
@@ -216,9 +234,10 @@ case $mode in
     do
         makeOutDir ${languageExt[$i]}
         check
+        checkFileExist $textT
         python src/Excel2Lua.py $textT $tem2Lua $i
         check
-        lua src/main.lua 3 $lua_xls $saveDir ${languageExt[$i]} "$baseLua${languageExt[$i]}"
+        lua src/main.lua 3 $lua_xls $saveDir ${languageExt[$i]} "$baseLua${languageExt[$i]}" $rmKeyFile
         check
     done
     checkLuaFile
@@ -234,6 +253,7 @@ case $mode in
         lua src/main.lua 1 $tem2Xls $saveDir ${languageExt[$i]}
         check
         cp -f $tem2Xls "$baseExp${languageExt[$i]}.lua"
+        fun2
         check
         python src/Lua2Excel.py $tem2Xls "$saveDir/${xlsFiles[$i]}.xls"
         check
